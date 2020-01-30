@@ -24,6 +24,7 @@ window.addEventListener('keydown', (e) => {
     if (overflow(button.classList[0])) return;
     shiftResultToDisplay();
     this[button.classList[0]](button.textContent, button.id);
+    console.log(input)
 })
 
 buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
@@ -34,9 +35,9 @@ function overflow(funct){
 
 function operate() {
     if (hasNumber(input[input.length - 1])) {
-        let a = parseInt(input.slice(0, indexOp[0]).join(''));
+        let a = parseFloat(input.slice(0, indexOp[0]).join(''));
         let operator = input.slice(indexOp[0], indexOp[0] + 1).join('');
-        let b = parseInt(input.slice(indexOp[0] + 1).join(''));
+        let b = parseFloat(input.slice(indexOp[0] + 1).join(''));
         switch(operator){
             case 'add': result = add(a, b); break;
             case 'subtract': result = subtract(a, b); break;
@@ -44,6 +45,7 @@ function operate() {
             case 'divide': result = divide(a, b); break;
             default: break;
         }
+        result = Math.round(result*1000000)/1000000;
         if (result.toString().length < 15) {
             indexOp.shift();
             if (indexOp.length != 0) {
@@ -105,7 +107,6 @@ function changeSign (start, howMany, item) {
 }
 
 function insertBackspace() {
-    console.log(input)
     input.pop();
     if (input.length == indexOp[indexOp.length - 1]) indexOp.pop();
     displayOperation.textContent = displayOperation.textContent.slice(0, -1);
@@ -148,5 +149,5 @@ function multiply(a, b) {
 
 function divide(a, b) {
     return b != 0 ? 
-        Math.round(a / b * Math.pow(10, 12)) / Math.pow(10, 12) : "COVFEFE";
+        Math.round(a / b * Math.pow(10, 6)) / Math.pow(10, 6) : "COVFEFE";
 }
